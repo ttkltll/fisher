@@ -1,5 +1,6 @@
+import json
 
-from flask import Flask, make_response, Request, json
+from flask import Flask, make_response, Request
 
 from helper import is_isbn_or_key
 from yushu_book import YuShuBook
@@ -23,10 +24,8 @@ def search(q, page):
         result = YuShuBook.search_by_isbn(q)
     else:
         result = YuShuBook.search_by_keyword(q)
-    return json.dumps(result)
+    return json.dumps(result), 200, {'content-type':'application/json'}
 
-def helloo():
-    return 'Hello QiYue'
 
 
 if __name__ == '__main__':
