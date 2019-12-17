@@ -1,11 +1,12 @@
-from flask import jsonify
+from flask import jsonify, Blueprint
 
-from fisher import app
 from helper import is_isbn_or_key
 from yushu_book import YuShuBook
 
 
-@app.route('/book/search/<q>/<page>')
+web = Blueprint('web', __name__)
+
+@web.route('/book/search/<q>/<page>')
 def search(q, page):
     """
 
@@ -24,3 +25,6 @@ def search(q, page):
 
 
 
+@web.route('/')
+def index():
+    return 'hello'
