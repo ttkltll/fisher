@@ -1,4 +1,4 @@
-from httper import HTTP
+from app.libs.httper import HTTP
 
 __author__ = '谭亮'
 
