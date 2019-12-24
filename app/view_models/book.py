@@ -1,5 +1,29 @@
 
 class BookViewModel:
+    def __init__(self, book):
+        self.title = book['title']
+        self.publisher = book['publisher']
+        self.author = '、'.join(book['author'])
+        self.image = book['image']
+        self.price = book['price']
+        self.summary = book['summary']
+        self.isbn = book['isbn']
+        self.pages = book['pages']
+
+
+class BookCollection:
+    def __init__(self):
+        self.total = 0
+        self.books = []
+        self.keyword = ''
+
+    def fill(self, yushu_book, keyword):
+        self.total = yushu_book.total
+        self.keyword = keyword
+        self.books = [BookViewModel(book) for book in yushu_book.books]
+
+
+class _BookViewModel:
     # 描述特征 （类变量、实例变量）
     # 行为 （方法）
     # 面向过程
@@ -24,6 +48,7 @@ class BookViewModel:
         }
         if data:
             returned['total'] = data['total']
+            # ?笔记:这里用到列表推导式
             returned['books'] = [cls.__cut_book_data(book) for book in data['books']]
         return returned
 
@@ -32,6 +57,7 @@ class BookViewModel:
         book = {
             'title': data['title'],
             'publisher': data['publisher'],
+            # 最笨的是用函数做if判断，或者用三元表达式。下面的写法最简洁。可以听下七月的《入门与进阶》逻辑那章节
             'pages': data['pages'] or '',
             'author': '、'.join(data['author']),
             'price': data['price'],

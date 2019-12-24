@@ -1,7 +1,9 @@
+import json
+
 from flask import jsonify, request, current_app
 
 from app.forms.book import SearchForm
-from app.view_models.book import BookViewModel
+from app.view_models.book import BookViewModel, BookCollection
 from app.web import web
 from app.libs.helper import is_isbn_or_key
 from app.spider.yushu_book import YuShuBook
@@ -11,30 +13,29 @@ from app.spider.yushu_book import YuShuBook
 @web.route('/book/search/')
 def search():
     """
-
-    :param q: 普通关键字，isbn
-    :param page:
-    :return:
+        q :普通关键字 isbn
+        page
+        ?q=金庸&page=1
     """
-    # alt+enter:导入模块
-    # a = Request
-    args = request.args
-    form = SearchForm(args)
+
+    form = SearchForm(request.args)
+    books = BookCollection()
+
     if form.validate():
         q = form.q.data.strip()
         page = form.page.data
-
         isbn_or_key = is_isbn_or_key(q)
+        yushu_book = YuShuBook()
+
         if isbn_or_key == 'isbn':
-            result = YuShuBook.search_by_isbn(q)
-            result = BookViewModel.package_single(result, q)
+            yushu_book.search_by_isbn(q)
         else:
-            result = YuShuBook.search_by_keyword(q)
-            result = BookViewModel.package_collection(result, q)
-        return jsonify(result)
-        #return json.dumps(result), 200, {'content-type': 'application/json'}
+            yushu_book.search_by_keyword(q, page)
+
+        books.fill(yushu_book, q)
+        # return jsonify(books)
+        return json.dumps(books, default=lambda o: o.__dict__)
     else:
-        # return '不符合格式'
         return jsonify(form.errors)
 
 @web.route('/')
