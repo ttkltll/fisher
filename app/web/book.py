@@ -1,6 +1,6 @@
 import json
 
-from flask import jsonify, request, current_app
+from flask import jsonify, request, current_app, make_response, flash, render_template
 
 from app.forms.book import SearchForm
 from app.view_models.book import BookViewModel, BookCollection
@@ -56,3 +56,20 @@ def test1():
     setattr(request, 'v', 2)
     print('-----------------')
     return ''
+
+
+@web.route('/test')
+def test():
+    r = {
+        'name': None,
+        'age': 18
+    }
+    # data['age']
+    r1 = {
+
+    }
+    flash('hello,qiyue', category='error')
+    flash('hello, jiuyue', category='warning')
+    # 模板 html
+    return render_template('test.html', data=r, data1=r1)
+
