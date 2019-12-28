@@ -34,15 +34,14 @@ def search():
 
         books.fill(yushu_book, q)
         # return jsonify(books)
-        return json.dumps(books, default=lambda o: o.__dict__)
-    else:
-        return jsonify(form.errors)
+        # return json.dumps(books, default=lambda o: o.__dict__)
 
-@web.route('/')
-def index():
-    args_value  = request.args
-    print(args_value)
-    return 'hello'
+    else:
+        # return jsonify(form.errors)
+        flash('被搜索的关键字不符合要示，请重新输入关键字')
+    return render_template('search_result.html', books=books)
+
+
 
 @web.route('/test1')
 def test1():
