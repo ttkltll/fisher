@@ -41,6 +41,14 @@ def search():
         flash('被搜索的关键字不符合要示，请重新输入关键字')
     return render_template('search_result.html', books=books)
 
+@web.route('/book/<isbn>/detail')
+def book_detal(isbn):
+    # 如何拿到这本书的字典？现在有isbn,到api上找到这本书，返回一个
+    yushu_book2 = YuShuBook()
+    yushu_book2.search_by_isbn(isbn)
+    print(__dict__(yushu_book2))
+
+    render_template('book_detail.html', book=yushu_book2,wishes={}, gifts={}, wish={})
 
 
 @web.route('/test1')

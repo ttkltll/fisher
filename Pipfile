@@ -9,6 +9,8 @@ verify_ssl = true
 flask = "==0.12.2"
 requests = "*"
 wtforms = "*"
+flask-sqlalchemy = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.7"
