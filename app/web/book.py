@@ -48,7 +48,7 @@ def book_detal(isbn):
     yushu_book.search_by_isbn(isbn)
     # print(__dict__(yushu_book2))
     # 怎么把yushu_book2这个对象转换成所要的数据，能被网页渲染的数据呢？
-    book = BookViewModel(yushu_book.books[0])
+    book = BookViewModel(yushu_book.first)
 
     return render_template('book_detail.html', book=book,wishes=[], gifts=[], wish=[])
 
