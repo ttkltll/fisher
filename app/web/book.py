@@ -44,11 +44,13 @@ def search():
 @web.route('/book/<isbn>/detail')
 def book_detal(isbn):
     # 如何拿到这本书的字典？现在有isbn,到api上找到这本书，返回一个
-    yushu_book2 = YuShuBook()
-    yushu_book2.search_by_isbn(isbn)
-    print(__dict__(yushu_book2))
+    yushu_book = YuShuBook()
+    yushu_book.search_by_isbn(isbn)
+    # print(__dict__(yushu_book2))
+    # 怎么把yushu_book2这个对象转换成所要的数据，能被网页渲染的数据呢？
+    book = BookViewModel(yushu_book.books[0])
 
-    render_template('book_detail.html', book=yushu_book2,wishes={}, gifts={}, wish={})
+    return render_template('book_detail.html', book=book,wishes=[], gifts=[], wish=[])
 
 
 @web.route('/test1')
