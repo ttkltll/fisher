@@ -42,7 +42,7 @@ def search():
     return render_template('search_result.html', books=books)
 
 @web.route('/book/<isbn>/detail')
-def book_detal(isbn):
+def book_detail(isbn):
     # 如何拿到这本书的字典？现在有isbn,到api上找到这本书，返回一个
     yushu_book = YuShuBook()
     yushu_book.search_by_isbn(isbn)
