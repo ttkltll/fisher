@@ -36,7 +36,7 @@ def login():
             login_user(user, remember=True)
             if request.args:
                 next = request.args['next']
-                redirect(next)
+                return redirect(next)
             return render_template('index.html')
         else:
             flash('账号不存在或密码错误')
