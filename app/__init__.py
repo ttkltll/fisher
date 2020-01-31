@@ -15,6 +15,7 @@ def creat_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = 'web.login'
     with app.app_context():
         db.create_all()
     return app
