@@ -62,16 +62,17 @@ def book_detail(isbn):
     # 怎么把yushu_book2这个对象转换成所要的数据，能被网页渲染的数据呢？
     book = BookViewModel(yushu_book.first)
     # 如何拿到wishes对象？根据这本书的id去wish对象中拿
-    wishes = Wish.query.filter(Wish.isbn==isbn).all() #查询到这本书有几个人wish
-    print(wishes)
-    print(type(wishes))
+    wishes = Wish.query.filter(Wish.isbn==isbn).count()#查询到这本书有几个人wish
     # 如何拿到所有想要这本书的人的信息？
     has_in_wishes = False
     has_in_gifts = False
-    wish = Wish.query.filter(Wish.uid==current_user.id)
-    if wish:
-        has_in_wishes = True
+    # 判断这本书有没有被这个用户加入心愿，或者加入gift。
+    wish = Wish.query.filter_by(uid=current_user.id, isbn=isbn).first()
+    if wish: # ?笔记：不用变量wish!
 
+        has_in_wishes = True
+    # 拿到这本书所有的赠送的人
+    gift_user =
 
 
     return render_template('book_detail.html', book=book,wishes=[], gifts=[], wish=[])
