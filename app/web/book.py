@@ -4,8 +4,11 @@ from flask import jsonify, request, current_app, make_response, flash, render_te
 from flask_login import current_user
 
 from app.forms.book import SearchForm
+from app.models.gift import Gift
+from app.models.user import User
 from app.models.wish import Wish
 from app.view_models.book import BookViewModel, BookCollection
+from app.view_models.trade import Wishesinfo
 from app.web import web
 from app.libs.helper import is_isbn_or_key
 from app.spider.yushu_book import YuShuBook
@@ -56,26 +59,30 @@ def book_detail(isbn):
      :param isbn:
     :return:
     """
+    has_in_gifts = False
+    has_in_wishes = False
+
+    # 取书籍详情数据
     yushu_book = YuShuBook()
     yushu_book.search_by_isbn(isbn)
-    # print(__dict__(yushu_book2))
-    # 怎么把yushu_book2这个对象转换成所要的数据，能被网页渲染的数据呢？
     book = BookViewModel(yushu_book.first)
-    # 如何拿到wishes对象？根据这本书的id去wish对象中拿
-    wishes = Wish.query.filter(Wish.isbn==isbn).count()#查询到这本书有几个人wish
-    # 如何拿到所有想要这本书的人的信息？
-    has_in_wishes = False
-    has_in_gifts = False
-    # 判断这本书有没有被这个用户加入心愿，或者加入gift。
-    wish = Wish.query.filter_by(uid=current_user.id, isbn=isbn).first()
-    if wish: # ?笔记：不用变量wish!
 
-        has_in_wishes = True
-    # 拿到这本书所有的赠送的人
-    gift_user =
+    # MVC MVT
 
+    if current_user.is_authenticated:
+        if Gift.query.filter_by(uid=current_user.id, isbn=isbn,
+                                launched=False).first():
+            has_in_gifts = True
+        if Wish.query.filter_by(uid=current_user.id, isbn=isbn,
+                                launched=False).first():
+            has_in_wishes = True
 
-    return render_template('book_detail.html', book=book,wishes=[], gifts=[], wish=[])
+    trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
+    trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
+    # 如何把查询到的这本书的所有wish对象列表，转换成模板需要的？
+
+    wishes = Wishesinfo(trade_wishes)
+    return render_template('book_detail.html', book=book,wishes=wishes, gifts=[], wish=[],has_in_wishes=has_in_wishes, has_in_gifts=has_in_gifts)
 
 
 
